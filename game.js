@@ -120,14 +120,14 @@ function skyTile() {
   let c = skyCache[key];
   if (c) return c;
   const n = b / 10;
-  const dayTop = [26, 58, 102], nightTop = [8, 15, 30];
-  const dayBot = [18, 48, 72], nightBot = [4, 8, 18];
-  const dayMid = [dayTop[0] * 0.85, dayTop[1] * 0.85, dayTop[2] * 0.9];
-  const nightMid = [nightTop[0] * 0.85, nightTop[1] * 0.85, nightTop[2] * 0.9];
+  // Vibrant sunset / golden hour day gradient blending to deep magical night
+  const dayTop = [38, 110, 185], nightTop = [10, 18, 38];
+  const dayMid = [245, 160, 60], nightMid = [25, 30, 65];
+  const dayBot = [250, 205, 100], nightBot = [6, 12, 24];
   c = makeTile(Math.max(1, Math.round(W)), Math.max(1, Math.round(H)), (g2, w, h) => {
     const g = g2.createLinearGradient(0, 0, 0, h);
     g.addColorStop(0, lerpRGB(dayTop, nightTop, n));
-    g.addColorStop(0.55, lerpRGB(dayMid, nightMid, n));
+    g.addColorStop(0.5, lerpRGB(dayMid, nightMid, n));
     g.addColorStop(1, lerpRGB(dayBot, nightBot, n));
     g2.fillStyle = g;
     g2.fillRect(0, 0, w, h);
