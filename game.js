@@ -1007,9 +1007,9 @@ function update(dtF) {
   duck.vy += GRAVITY * dtF;
   duck.y += duck.vy * dtF;
   if (duck.flapT > 0) duck.flapT -= dtF;
-  duck.targetRot = Math.max(-0.55, Math.min(1.15, duck.vy * 0.055));
-  duck.rotVel += (duck.targetRot - duck.rot) * 0.09 * dtF;
-  duck.rotVel *= Math.pow(0.85, dtF);
+  duck.targetRot = Math.max(-0.65, Math.min(1.25, duck.vy * 0.055));
+  duck.rotVel += (duck.targetRot - duck.rot) * 0.14 * dtF;
+  duck.rotVel *= Math.pow(0.80, dtF);
   duck.rot += duck.rotVel * dtF;
 
   if (state === states.OVER) {

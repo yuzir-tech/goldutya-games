@@ -641,11 +641,15 @@ function update(dt) {
       displayScore = Math.min(score, displayScore + Math.max(1, Math.ceil((score - displayScore) * 0.2)));
     }
 
-    // move baskets
+    // move baskets with organic sway & bob
     for (const b of baskets) {
       if (b.move) {
         b.move.phase += b.move.speed * gf * diffMult();
         b.x = b.move.cx + Math.sin(b.move.phase) * b.move.amp;
+        // slight vertical floating bob
+        b.yOffset = Math.sin(b.move.phase * 1.5) * 3;
+      } else {
+        b.yOffset = Math.sin(performance.now() * 0.003 + b.idx) * 2;
       }
     }
 
@@ -918,14 +922,15 @@ function drawBg() {
 
 function drawBasket(b) {
   if (!IM.basket.complete || !IM.basket.naturalWidth) return;
-  const sy = screenY(b.y);
+  const by = b.y + (b.yOffset || 0);
+  const sy = screenY(by);
   if (sy < -b.h || sy > H + b.h) return;
 
   // soft glow under basket
   if (IM.glow.complete && IM.glow.naturalWidth) {
-    ctx.globalAlpha = 0.25;
-    const gw = b.w * 1.3;
-    const gh = gw * 0.4;
+    ctx.globalAlpha = 0.28;
+    const gw = b.w * 1.35;
+    const gh = gw * 0.42;
     ctx.drawImage(IM.glow, b.x - gw / 2, sy + b.h * 0.15, gw, gh);
     ctx.globalAlpha = 1;
   }
