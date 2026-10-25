@@ -16,6 +16,18 @@
 }
 .overlay-score[hidden] { display: none; }
 
+/* game-over stats line */
+#goStats {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--muted, #A5ADBC);
+  line-height: 1.8;
+}
+#goStats[hidden] { display: none; }
+#goStats span {
+  font-weight: 700;
+}
+
 .overlay-go-panel {
   position: relative;
   display: flex;
@@ -48,4 +60,31 @@
   letter-spacing: 2px;
   color: var(--muted, #A5ADBC);
   text-transform: uppercase;
+}
+
+/* overlay enter animation */
+.overlay {
+  animation: overlayFadeIn 0.35s ease-out;
+}
+@keyframes overlayFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* score pop animation on game-over */
+.overlay-score b {
+  animation: scorePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes scorePop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* button hover lift */
+.btn {
+  transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s;
+}
+.btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
 }
