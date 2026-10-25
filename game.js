@@ -829,15 +829,25 @@ function flap() {
   }
   if (state !== states.PLAY) return;
   duck.vy = FLAP_V;
-  duck.targetRot = -0.55;
-  duck.sq = 1;
-  duck.flapT = 9;
+  duck.targetRot = -0.62;
+  duck.rotVel = -0.15; /* snappy upward kick */
+  duck.sq = 1.2;
+  duck.flapT = 10;
   quack();
-  burst(duck.x - duck.w * 0.3, duck.y + duck.h * 0.2, GOLD, 4);
+  burst(duck.x - duck.w * 0.3, duck.y + duck.h * 0.2, GOLD, 6);
+  burst(duck.x - duck.w * 0.2, duck.y + duck.h * 0.3, GOLD2, 4);
 }
 
 function handleKey(e) {
   if (e.code === "KeyP" || e.code === "Escape") { e.preventDefault(); togglePause(); return; }
+  if (e.code === "KeyR" || e.code === "Enter") {
+    if (state === states.OVER) {
+      e.preventDefault();
+      reset();
+      flap();
+      return;
+    }
+  }
   if (e.code === "Space" || e.code === "ArrowUp") {
     e.preventDefault();
     if (paused) { setPaused(false); return; }
@@ -1129,7 +1139,12 @@ function update(dtF) {
       burst(duck.x + 16, duck.y - 18, GOLD2, 7);
       popups.push({ x: duck.x + 24, y: duck.y - 26, text: "+" + pts, life: 42, vy: -1.3 });
       if (combo > 0 && combo % 3 === 0) flashA = 0.16;
-      if (pipeCount % 20 === 0 && nightDir === 0) { nightDir = 1; nightTimer = 90; }
+      if (score > 0 && score % 10 === 0) {
+        burst(W / 2, H * 0.35, GOLD2, 24);
+        burst(W / 2, H * 0.35, "#56D9FF", 16);
+        popups.push({ x: W / 2, y: H * 0.32, text: score + " POINTS! 🎉", life: 60, vy: -0.9, age: 0 });
+        TG.haptic("heavy");
+      }
       if (pipeCount > 0 && pipeCount % 10 === 0) {
         PIPE_GAP = Math.max(H * 0.24, PIPE_GAP - 3);
         PIPE_SPEED = Math.min(PIPE_SPEED + 0.1, (W * 0.006) * 2);
