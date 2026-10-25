@@ -891,30 +891,41 @@ function land(b, isRespawn) {
 /* ---------------- render ---------------- */
 
 function drawBg() {
-  if (!IM.bg.complete || !IM.bg.naturalWidth) {
-    ctx.fillStyle = "#132211";
-    ctx.fillRect(0, 0, W, H);
-    return;
-  }
-  // single cover image with limited parallax (no tiling seams)
-  const h = H * 1.35;
-  const w = h;
-  const slack = h - H;
-  const off = Math.min(slack, camY * 0.07);
-  const x = (W - w) / 2;
-  const y = H - h + (slack - off);
-  ctx.drawImage(IM.bg, x, y, w, h);
-  ctx.fillStyle = "rgba(4,10,4,0.34)";
+  // Rich magical night/forest gradient background
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, "#081426");   // deep twilight sky
+  grad.addColorStop(0.5, "#0d2218"); // deep forest canopy
+  grad.addColorStop(1, "#17301c");   // mossy ground tint
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // ambient fireflies
+  if (IM.bg.complete && IM.bg.naturalWidth) {
+    const h = H * 1.35;
+    const w = h;
+    const slack = h - H;
+    const off = Math.min(slack, camY * 0.05);
+    const x = (W - w) / 2;
+    const y = H - h + (slack - off);
+    ctx.globalAlpha = 0.35;
+    ctx.drawImage(IM.bg, x, y, w, h);
+    ctx.globalAlpha = 1;
+  }
+
+  // Atmospheric gradient vignette
+  const vignette = ctx.createRadialGradient(W / 2, H / 2, W * 0.3, W / 2, H / 2, W * 0.85);
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(4,8,12,0.45)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, W, H);
+
+  // ambient fireflies & stars
   for (const ff of bgFireflies) {
-    const a = (Math.sin(ff.phase) * 0.5 + 0.5) * 0.6;
+    const a = (Math.sin(ff.phase) * 0.5 + 0.5) * 0.75;
     if (a < 0.05) continue;
     ctx.globalAlpha = a;
     ctx.fillStyle = ff.color + a.toFixed(2) + ")";
     ctx.beginPath();
-    ctx.arc(ff.x, ff.y, ff.size, 0, Math.PI * 2);
+    ctx.arc(ff.x, ff.y, ff.size * 1.2, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.globalAlpha = 1;
